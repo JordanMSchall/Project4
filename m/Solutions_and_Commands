@@ -1,0 +1,17 @@
+Excercize 1
+    Task 1
+        change horizon to time T
+        clingo --out-atomf='%s.' -V0 -c horizon=15 m/{action-M.lp,goal-M-mod.lp,output-M.lp} instances/x11_y6_n66_r1_s8_ps1_pr8_u8_o8_N001.lp
+    Task 2
+
+        clingo --out-atomf='%s.' -V0 -c horizon=10 m/{action-M-mod.lp,goal-M-mod.lp,output-M.lp} instances/x11_y6_n66_r1_s8_ps1_pr8_u8_o8_N001.lp > out
+
+
+Shortcuts
+/Users/home/opt/anaconda3/envs/project4/bin/viz = $VISUALIZER
+
+Save output to file for visualizer
+clingo --out-atomf='%s.' -V0 -c horizon=20 m/{action-M-mod.lp,goal-M-mod.lp,output-M.lp} instances/x11_y6_n66_r1_s8_ps1_pr8_u8_o8_N001.lp > out
+
+Run visualizer
+cat out | head -n1 | $VISUALIZER
