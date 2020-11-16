@@ -1,17 +1,31 @@
-Excercize 1
+Exercise 1
     Task 1
-        change horizon to time T
+        Original: processed(A,R) :- ordered(O,A), shelved(S,A), isRobot(R), position(S,C,0), position(R,C,horizon).
+        Modified: processed(A,R) :- ordered(O,A), shelved(S,A), isRobot(R), position(S,C,0), position(R,C,T), time(T).
+
         clingo --out-atomf='%s.' -V0 -c horizon=15 m/{action-M.lp,goal-M-mod.lp,output-M.lp} instances/x11_y6_n66_r1_s8_ps1_pr8_u8_o8_N001.lp
+        cat out | head -n1 | $VISUALIZER
     Task 2
+        Original: direction((X,Y)) :- X=-1..1, Y=-1..1, |X+Y|=1.
+        Modified: direction((X,Y)) :- X=-1..1, Y=-1..1, |X+Y|=1.
+                  direction((X,Y)) :- X=-1..1, Y=-1..1, |X|+|Y|=2.
 
         clingo --out-atomf='%s.' -V0 -c horizon=10 m/{action-M-mod.lp,goal-M-mod.lp,output-M.lp} instances/x11_y6_n66_r1_s8_ps1_pr8_u8_o8_N001.lp > out
+        cat out | head -n1 | $VISUALIZER
 
+Exercise 2
+    Task 1
+        Original:
+        Modified:
+
+        clingo --out-atomf='%s.' -V0 -c horizon=20 m/{action-M-mod.lp,goal-M.lp,output-M.lp} instances/x11_y6_n66_r8_s8_ps1_pr8_u8_o8_N001.lp > out
+        cat out | head -n1 | $VISUALIZER
 
 Shortcuts
 /Users/home/opt/anaconda3/envs/project4/bin/viz = $VISUALIZER
 
 Save output to file for visualizer
-clingo --out-atomf='%s.' -V0 -c horizon=20 m/{action-M-mod.lp,goal-M-mod.lp,output-M.lp} instances/x11_y6_n66_r1_s8_ps1_pr8_u8_o8_N001.lp > out
+clingo --out-atomf='%s.' -V0 -c horizon=10 m/action-M-mod.lp m/goal-M-mod.lp m/output-M.lp instances/x11_y6_n66_r1_s8_ps1_pr8_u8_o8_N001.lp > out
 
 Run visualizer
 cat out | head -n1 | $VISUALIZER
