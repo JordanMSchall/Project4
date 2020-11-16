@@ -17,8 +17,18 @@ Exercise 2
     Task 1
         Original:   moveto(C',C,T) :- nextto(C',D,C), position(R,C',T-1), move(R,D,T).
                     :- moveto(C',C,T), moveto(C,C',T), C < C'.
-                    :- moveto(C',C,T), moveto(C,C',T), C' < C.
         Modified:
+             crossFront() :- isRobot(R), isRobot(R'), R < R', X=1, Y=1, X'=-1, move(R,(X,Y), T), move(R',(X',Y),T).
+             crossRear() :- isRobot(R), isRobot(R'), R < R', X=1, Y=-1, X'=-1, move(R,(X,Y), T), move(R',(X',Y),T).
+             crossRight() :- isRobot(R), isRobot(R'), R < R', Y=1, Y'=-1, X=-1, move(R,(X,Y'), T), move(R',(X,Y),T).
+             crossLeft() :- isRobot(R), isRobot(R'), R < R', Y=1, Y'=-1, X=1, move(R,(X,Y'), T), move(R',(X,Y),T).
+             :- not crossFront().
+             :- not crossRear().
+             :- not crossRight().
+             :- not crossLeft().
+        Explanation:
+            There are 2 cases for crossing crossing with x=1 and x=-1 and y =1 meaning two robots going forward and one moving left and the other right
+            The other cases is both moving right x=1 and one up one y=1 and one down one y=-1 or moving left
 
         clingo --out-atomf='%s.' -V0 -c horizon=20 m/{action-M-mod.lp,goal-M.lp,output-M.lp} instances/x11_y6_n66_r8_s8_ps1_pr8_u8_o8_N001.lp > out
         cat out | head -n1 | $VISUALIZER
