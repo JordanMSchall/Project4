@@ -15,7 +15,9 @@ Exercise 1
 
 Exercise 2
     Task 1
-        Original:
+        Original:   moveto(C',C,T) :- nextto(C',D,C), position(R,C',T-1), move(R,D,T).
+                    :- moveto(C',C,T), moveto(C,C',T), C < C'.
+                    :- moveto(C',C,T), moveto(C,C',T), C' < C.
         Modified:
 
         clingo --out-atomf='%s.' -V0 -c horizon=20 m/{action-M-mod.lp,goal-M.lp,output-M.lp} instances/x11_y6_n66_r8_s8_ps1_pr8_u8_o8_N001.lp > out
