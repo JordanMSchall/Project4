@@ -26,10 +26,11 @@ moveto(C',C,T) :- nextto(C',D,C), position(R,C',T-1), move(R,D,T).
  :- moveto(C',C,T), moveto(C,C',T), C < C'.
  % edge crossing would look something like we have two distinct robots and their directions cross paths meaning R moveto = in front of currentPos R' and
  % R' is moveto in front of currentPos R then they cannot cross same with behind
- crossFront() :- isRobot(R), isRobot(R'), R < R', X=1, Y=1, X=-1, move(R,(X,Y), T), move(R',(X',Y),T).
- crossRear() :- isRobot(R), isRobot(R'), R < R', X=1, Y=-1, X=-1, move(R,(X,Y), T), move(R',(X',Y),T).
+ crossFront() :- isRobot(R), isRobot(R'), R < R', X=1, Y=1, X'=-1, move(R,(X,Y), T), move(R',(X',Y),T).
+ crossRear() :- isRobot(R), isRobot(R'), R < R', X=1, Y=-1, X'=-1, move(R,(X,Y), T), move(R',(X',Y),T).
  :- not crossFront().
  :- not crossRear().
+
 % - vertex collision ------------------------------------------------------------
  :- { position(R,C,T) : isRobot(R) }  > 1, position(C), time(T).
 
