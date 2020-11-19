@@ -24,7 +24,7 @@ position(R,C,T) :- position(R,C,T-1), not move(R,_,T), isRobot(R), time(T).
 % - edge collision --------------------------------------------------------------
 moveto(C',C,T) :- nextto(C',D,C), position(R,C',T-1), move(R,D,T).
  :- moveto(C',C,T), moveto(C,C',T), C < C'.
- % see Colutions_and_Comments
+% - see Solutions_and_Comments
              crossFront() :- isRobot(R), isRobot(R'), R < R', X=1, Y=1, X'=-1, move(R,(X,Y), T), move(R',(X',Y),T).
              crossRear() :- isRobot(R), isRobot(R'), R < R', X=1, Y=-1, X'=-1, move(R,(X,Y), T), move(R',(X',Y),T).
              crossRight() :- isRobot(R), isRobot(R'), R < R', Y=1, Y'=-1, X=-1, move(R,(X,Y'), T), move(R',(X,Y),T).

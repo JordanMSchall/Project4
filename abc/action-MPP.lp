@@ -52,3 +52,5 @@ moveto(C',C,T) :- nextto(C',D,C), position(R,C',T-1), move(R,D,T).
 
  :- { carries(R,S,T) } > 1, isRobot(R), time(T).
  :- { carries(R,S,T) } > 1, isShelf(S), time(T).
+
+
