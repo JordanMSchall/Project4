@@ -27,7 +27,7 @@ consume(R,1,T)  :- putdown(R, _,T).
 % For each robot and time step, if no energy is currently consumed, the energy level
 % remains unchanged.
 % position(R,C,T) :- position(R,C,T-1), not    move(R,_,T), isRobot(R), time(T).
-% energy(R,E,T) :- energy(R,E,T-1), not consume(R,_,T), isRobot(R), time(T).
+energy(R,E,T) :- energy(R,E,T-1), not consume(R,_,T), isRobot(R), time(T).
 
 % *Forbid Over-Consumption*
 % For each robot and time step, the energy level must not be negative.
