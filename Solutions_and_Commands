@@ -38,11 +38,11 @@ Excercise 3
     Task 1
         Original: N/A
         Modification:
-            :- side(X,right), side(X', left), position(R,(X,_),T), position(R,(X',_),T+1), isRobot(R).
-            :- side(X,right), side(X', left), position(R,(X,_),T), position(R,(X',_),T+1), isRobot(R).
+            :- isRobot(R), time(T), position(R,(X',Y'),T-1), position(R,(X,Y),T), side(X, right), side(X', left).
+            :- isRobot(R), time(T), position(R,(X',Y'),T-1), position(R,(X,Y),T), side(X, left), side(X', right).
 
         Explanation:
-            The above constraints do not allow a robot in its current state "time T" to go from one side to the other at the robots next state next time T
+            The above constraints do not allow a robot in its current state "time T" to go from one side to the other if it was previous position was left
 
 
     clingo --out-atomf='%s.' -V0 -c horizon=25 abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} control/{sides.lp,highways.lp}  instances/x9_y6_n54_r4_s8_ps2_pr8_u8_o8_N001.lp > out
@@ -51,16 +51,31 @@ Excercise 3
     Task 2
         Original: N/A
         Modification:
-            See above
+            % Determine left/right x-coordinates
+            side(X, left) :- SX = #max{ X' : position((X',_)) },  X<=(SX+1)/2, position((X,_)).
+            side(X, right) :- SX = #max{ X' : position((X',_)) }, X> (SX+1)/2, position((X,_)).
+
+            % Group robots into left/rigth side wrt their initial position
+            :- isRobot(R), time(T), position(R,(X',Y'),T-1), position(R,(X,Y),T), side(X, right), side(X', left).
+            :- isRobot(R), time(T), position(R,(X',Y'),T-1), position(R,(X,Y),T), side(X, left), side(X', right).
+
         Explanation:
             By not allowing the robots to cross the midline we successfully assign everything to one half. Once shelves are initialized
             they do not move unless by a robot in which case the robot cannot move across sides. This meets the overall objective
-            Assign robots to shelves and picking stations on the same side we do that by limiting movement after intiialization.
+            Assign robots to shelves and picking stations on the same side we do that by limiting movement after init()'s'.
 
-    clingo --out-atomf='%s.' -V0 control/assign-a-sides.lp instances/x9_y6_n54_r4_s8_ps2_pr8_u8_o8_N001.lp | head -n 1 | clingo --out-atomf='%s.' -V0 -c horizon=40 - control/{control-abc.lp,highways.lp} abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} instances/x9_y6_n54_r4_s8_ps2_pr8_u8_o8_N001.lp
+    // FAULTY PROVIDED COMMAND LINE HAD TO ADOPT BY ADDING assign-a-sides.lp for visualizer
+    clingo --out-atomf='%s.' -V0 -c horizon=40 control/{assign-a-sides.lp,control-abc.lp,highways.lp} abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} instances/x9_y6_n54_r4_s8_ps2_pr8_u8_o8_N001.lp > out
+    cat out | head -n1 | $VISUALIZER
 
-   Raised Horizon
-    clingo --out-atomf='%s.' -V0 control/assign-a-sides.lp instances/x9_y6_n54_r4_s8_ps2_pr8_u8_o8_N001.lp | head -n 1 | clingo --out-atomf='%s.' -V0 -c horizon=50 - control/{control-abc.lp,highways.lp} abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} instances/x9_y6_n54_r4_s8_ps2_pr8_u8_o8_N001.lp
+
+Exercise 4
+    Task 1
+    Original: Template
+    Modification:
+    Explanation:
+
+    clingo --out-atomf='%s.' -V0 -c horizon=30 control/{energy.lp,highways.lp} abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} instances/x7_y6_n42_r3_s6_ps1_pr12_u24_o3_nrg_N001.lp > out
     cat out | head -n1 | $VISUALIZER
 
 

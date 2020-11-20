@@ -22,7 +22,7 @@ position(           (X,Y))   :- init(object(node,_),           value(at,(X,Y))).
 
 position(station(P),(X,Y))   :- init(object(pickingStation,P), value(at,(X,Y))).
 
-% - Robot r has position at timestamp
+% - Robot r has position at timestamp 0
 position(  robot(R),(X,Y),0) :- init(object(robot,R),          value(at,(X,Y))).
 position(  shelf(S),(X,Y),0) :- init(object(shelf,S),          value(at,(X,Y))).
 
