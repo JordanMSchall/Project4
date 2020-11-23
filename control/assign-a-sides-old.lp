@@ -21,19 +21,11 @@ side(X, left) :- SX = #max{ X' : position((X',_)) },  X<=(SX+1)/2, position((X,_
 side(X, right) :- SX = #max{ X' : position((X',_)) }, X> (SX+1)/2, position((X,_)).
 
 % Group robots, shelve and picking stations into left & right wrt their initial x-coordinates
-    % Group Robots
-    isRight(R,T):- position(R,(X,Y),T), side(X,right), isRobot(R).
-    isLeft(R,T):- position(R,(X,Y),T), side(X,left), isRobot(R).
-    % Group Shelves
-    isRight(S):- position(S,(X,Y),T), side(X,right), isShelf(S).
-    isLeft(S):- position(S,(X,Y),T), side(X,left), isShelf(S).
-    %Group Stations
-    isRight(S):- position(S,(X,Y),T), side(X,right), isStation(S).
-    isLeft(S):- position(S,(X,Y),T), side(X,left), isStation(S).
+% ...
 
 % Restrict movement of left/rigth robots to the respective half of the grid
-:- isRobot(R), isRight(R,T), isLeft(R,T-1).
-:- isRobot(R), isRight(R,T-1), isLeft(R,T).
+:- isRobot(R), time(T), position(R,(X',Y'),T-1), position(R,(X,Y),T), side(X, right), side(X', left).
+:- isRobot(R), time(T), position(R,(X',Y'),T-1), position(R,(X,Y),T), side(X, left), side(X', right).
 
 % Use all robots
 :- isRobot(R), not assign(R,_,_).

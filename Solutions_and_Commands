@@ -4,49 +4,52 @@ Exercise 1
         Modified: processed(A,R) :- ordered(O,A), shelved(S,A), isRobot(R), position(S,C,0), position(R,C,T), time(T).
 
         clingo --out-atomf='%s.' -V0 -c horizon=15 m/{action-M.lp,goal-M-mod.lp,output-M.lp} instances/x11_y6_n66_r1_s8_ps1_pr8_u8_o8_N001.lp
-        cat out | head -n1 | $VISUALIZER
+        cat out | head -n1 | viz
     Task 2
         Original: direction((X,Y)) :- X=-1..1, Y=-1..1, |X+Y|=1.
         Modified: direction((X,Y)) :- X=-1..1, Y=-1..1, |X+Y|=1.
                   direction((X,Y)) :- X=-1..1, Y=-1..1, |X|+|Y|=2.
 
         clingo --out-atomf='%s.' -V0 -c horizon=10 m/{action-M-mod.lp,goal-M-mod.lp,output-M.lp} instances/x11_y6_n66_r1_s8_ps1_pr8_u8_o8_N001.lp > out
-        cat out | head -n1 | $VISUALIZER
+        cat out | head -n1 | viz
 
 Exercise 2
     Task 1
         Original:   moveto(C',C,T) :- nextto(C',D,C), position(R,C',T-1), move(R,D,T).
                     :- moveto(C',C,T), moveto(C,C',T), C < C'.
         Modified:
-             crossFront() :- isRobot(R), isRobot(R'), R < R', X=1, Y=1, X'=-1, move(R,(X,Y), T), move(R',(X',Y),T).
-             crossRear() :- isRobot(R), isRobot(R'), R < R', X=1, Y=-1, X'=-1, move(R,(X,Y), T), move(R',(X',Y),T).
-             crossRight() :- isRobot(R), isRobot(R'), R < R', Y=1, Y'=-1, X=-1, move(R,(X,Y'), T), move(R',(X,Y),T).
-             crossLeft() :- isRobot(R), isRobot(R'), R < R', Y=1, Y'=-1, X=1, move(R,(X,Y'), T), move(R',(X,Y),T).
-             :- not crossFront().
-             :- not crossRear().
-             :- not crossRight().
-             :- not crossLeft().
+            %- collision prevention of diagonal cross
+            :- isRobot(R), isRobot(R'), position(R,C,T), position(R',C',T), R != R', nextto(C,_,C'), direction((X',Y')), direction((X,Y)), move(R,(X,Y), T), move(R',(X',Y'),T), |X| +|Y|= 2, |X'|+|Y'|= 2.
+
+
+
         Explanation:
-            There are 2 cases for crossing crossing with x=1 and x=-1 and y =1 meaning two robots going forward and one moving left and the other right
-            The other cases is both moving right x=1 and one up one y=1 and one down one y=-1 or moving left
+            % this line states there cannot exist a time when there are 2 robots
+            % next to each other that are moving and that there X + Y cannot = 2 ( meaning diagonal move)
+            % diagonal direction
 
         clingo --out-atomf='%s.' -V0 -c horizon=20 m/{action-M-mod.lp,goal-M.lp,output-M.lp} instances/x11_y6_n66_r8_s8_ps1_pr8_u8_o8_N001.lp > out
-        cat out | head -n1 | $VISUALIZER
-
+        cat out | head -n1 | viz
 
 Excercise 3
     Task 1
         Original: N/A
         Modification:
-            :- isRobot(R), time(T), position(R,(X',Y'),T-1), position(R,(X,Y),T), side(X, right), side(X', left).
-            :- isRobot(R), time(T), position(R,(X',Y'),T-1), position(R,(X,Y),T), side(X, left), side(X', right).
+            % Group robots into left/rigth side wrt their initial position
+            isRight(R,T):- position(R,(X,Y),T), side(X,right), isRobot(R).
+            isLeft(R,T):- position(R,(X,Y),T), side(X,left), isRobot(R).
+
+            % Forbid robots to occupy a position on the other side
+            :- isRobot(R), isRight(R,T), isLeft(R,T-1).
+            :- isRobot(R), isRight(R,T-1), isLeft(R,T).
 
         Explanation:
-            The above constraints do not allow a robot in its current state "time T" to go from one side to the other if it was previous position was left
-
+            First we decide is a robot is on the left or right at this time
+            then we ensure the a robot that is previously left cannot go rightand a
+            robot that is previously right cannot left
 
     clingo --out-atomf='%s.' -V0 -c horizon=25 abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} control/{sides.lp,highways.lp}  instances/x9_y6_n54_r4_s8_ps2_pr8_u8_o8_N001.lp > out
-    cat out | head -n1 | $VISUALIZER
+    cat out | head -n1 | viz
 
     Task 2
         Original: N/A
@@ -66,7 +69,8 @@ Excercise 3
 
     // FAULTY PROVIDED COMMAND LINE HAD TO ADOPT BY ADDING assign-a-sides.lp for visualizer
     clingo --out-atomf='%s.' -V0 -c horizon=40 control/{assign-a-sides.lp,control-abc.lp,highways.lp} abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} instances/x9_y6_n54_r4_s8_ps2_pr8_u8_o8_N001.lp > out
-    cat out | head -n1 | $VISUALIZER
+    cat out | head -n1 | viz
+    clingo --out-atomf='%s.' -V0 -c horizon=40 control/{assign-a-sides.lp,control-abc.lp,highways.lp} abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} instances/x9_y6_n54_r4_s8_ps2_pr8_u8_o8_N001.lp > out
 
 
 Exercise 4
@@ -76,15 +80,15 @@ Exercise 4
     Explanation:
 
     clingo --out-atomf='%s.' -V0 -c horizon=30 control/{energy.lp,highways.lp} abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} instances/x7_y6_n42_r3_s6_ps1_pr12_u24_o3_nrg_N001.lp > out
-    cat out | head -n1 | $VISUALIZER
+    cat out | head -n1 | viz
 
 
 
 Shortcuts
-/Users/home/opt/anaconda3/envs/project4/bin/viz = $VISUALIZER
+/Users/home/opt/anaconda3/envs/project4/bin/viz = viz
 
 Save output to file for visualizer
 clingo --out-atomf='%s.' -V0 -c horizon=10 m/action-M-mod.lp m/goal-M-mod.lp m/output-M.lp instances/x11_y6_n66_r1_s8_ps1_pr8_u8_o8_N001.lp > out
 
 Run visualizer
-cat out | head -n1 | $VISUALIZER
+cat out | head -n1 | viz

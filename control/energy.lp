@@ -20,19 +20,20 @@ consume(R,1,T)  :- putdown(R, _,T).
 % towards its current energy level (via energy/3)
 % position(R,C,T) :- move(R,D,T),    position(R,C',T-1),     nextto(C',D,C).
 % energy(R,E,T) :- consume(R,A,T), energy(R,E,T), energy(R,E',T-1), E = E'- A.
-% consume(R,A,T) :- consume(R,A,T), energy(R,E,T), energy(R,E',T), E = E'- A.
-
+consume(R,A,T) :- consume(R,A,T), energy(R,E,T), energy(R,E',T), E = E'- A.
+    :- not consume(R,A,T)
 
 % *Inertia*
 % For each robot and time step, if no energy is currently consumed, the energy level
 % remains unchanged.
 % position(R,C,T) :- position(R,C,T-1), not    move(R,_,T), isRobot(R), time(T).
 energy(R,E,T) :- energy(R,E,T-1), not consume(R,_,T), isRobot(R), time(T).
+    :- not energy(R,E,T)
 
 % *Forbid Over-Consumption*
 % For each robot and time step, the energy level must not be negative.
 % we know this works
-:- energy( R, E, T ), E >= 0, time(T), robot(R).
+:- energy( R, E, T ), E < 0, time(T), robot(R).
 
 % - Output -----------------------------------------------------------------------------------------
 
