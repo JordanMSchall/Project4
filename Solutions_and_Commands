@@ -70,7 +70,6 @@ Excercise 3
     // FAULTY PROVIDED COMMAND LINE HAD TO ADOPT BY ADDING assign-a-sides.lp for visualizer
     clingo --out-atomf='%s.' -V0 -c horizon=40 control/{assign-a-sides.lp,control-abc.lp,highways.lp} abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} instances/x9_y6_n54_r4_s8_ps2_pr8_u8_o8_N001.lp > out
     cat out | head -n1 | viz
-    clingo --out-atomf='%s.' -V0 -c horizon=40 control/{assign-a-sides.lp,control-abc.lp,highways.lp} abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} instances/x9_y6_n54_r4_s8_ps2_pr8_u8_o8_N001.lp > out
 
 
 Exercise 4
@@ -82,6 +81,7 @@ Exercise 4
     clingo --out-atomf='%s.' -V0 -c horizon=30 control/{energy.lp,highways.lp} abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} instances/x7_y6_n42_r3_s6_ps1_pr12_u24_o3_nrg_N001.lp > out
     cat out | head -n1 | viz
 
+    clingo --out-atomf='%s.' -V0 -c horizon=30 control/{energy.lp,highways.lp} abc/{action-MPP.lp,goal-D-a.lp,output-MPPD.lp} instances/x7_y6_n42_r3_s6_ps1_pr12_u24_o3_nrg_N001.lp > out
 
 
 Shortcuts
