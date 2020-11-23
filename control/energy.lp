@@ -25,8 +25,9 @@ energy(R,E,T) :- isRobot(R), time(T), consume(R,A,T), energy(R,E',T-1), E = E'- 
 % *Inertia*
 % For each robot and time step, if no energy is currently consumed, the energy level
 % remains unchanged.
-% consumed_e(R,T) :- consume(R, _,T).
-energy(R,E,T) :- energy(R,E,T-1), not consume(R, _,T), isRobot(R), time(T).
+consumed_e(R,T) :- consume(R, _,T).
+energy(R,E,T) :- energy(R,E,T-1), not consumed_e(R,T), isRobot(R), time(T).
+
 
 
 % *Forbid Over-Consumption*
