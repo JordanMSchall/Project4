@@ -31,7 +31,7 @@ side(X, right) :- SX = #max{ X' : position((X',_)) }, X> (SX+1)/2, position((X,_
     isRight(S):- position(S,(X,Y),T), side(X,right), isStation(S).
     isLeft(S):- position(S,(X,Y),T), side(X,left), isStation(S).
 
-% Restrict movement of left/rigth robots to the respective half of the grid
+% Restrict movement of left/right robots to the respective half of the grid
 :- isRobot(R), isRight(R,T), isLeft(R,T-1).
 :- isRobot(R), isRight(R,T-1), isLeft(R,T).
 
